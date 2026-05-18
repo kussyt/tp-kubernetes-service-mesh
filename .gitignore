@@ -22,11 +22,7 @@ Thumbs.db
 .env
 *.log
 
-# Captures (garder les placeholders, ignorer les vraies captures si volumineuses)
-docs/captures/**/*.png
-docs/captures/**/*.jpg
-!docs/captures/**/.gitkeep
-!docs/captures/**/README.md
+# Captures : versionnées dans docs/captures/ pour la remise du TP
 
 # Minikube / kubectl local
 *.kubeconfig.local

@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: labotrack
+      POSTGRES_USER: labotrack
+      POSTGRES_PASSWORD: labotrack
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U labotrack -d labotrack"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  sample-api:
+    build: ./sample-api
+    image: labotrack/sample-api:1.0.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/labotrack
+      SPRING_DATASOURCE_USERNAME: labotrack
+      SPRING_DATASOURCE_PASSWORD: labotrack
+    ports:
+      - "8081:8081"
+
+  analysis-api:
+    build: ./analysis-api
+    image: labotrack/analysis-api:1.0.0
+    depends_on:
+      - sample-api
+    environment:
+      SAMPLE_API_URL: http://sample-api:8081
+      ANALYSIS_LATENCY_MS: "300"
+    ports:
+      - "8082:8082"
+
+  result-frontend:
+    build: ./result-frontend
+    image: labotrack/result-frontend:1.0.0
+    depends_on:
+      - sample-api
+      - analysis-api
+    environment:
+      SAMPLE_API_URL: http://sample-api:8081
+      ANALYSIS_API_URL: http://analysis-api:8082
+    ports:
+      - "8090:8080"

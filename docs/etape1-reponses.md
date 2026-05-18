@@ -4,7 +4,10 @@
 **Date** : 18 mai 2026  
 **Environnement** : Windows, Docker Desktop 28.5.1, Minikube v1.38.1 (driver `docker`), kubectl v1.34.1
 
-Nous avons réalisé les manipulations sur la machine de développement du binôme. Les sorties terminal ci-dessous proviennent de l’exécution effective des commandes. Pour la remise, des captures d’écran correspondantes sont déposées dans `docs/captures/etape1/`.
+Les captures d’écran sont intégrées ci-dessous pour chaque question.
+
+> **Pour voir les images** : ouvrir l’**aperçu Markdown** avec `Ctrl+Shift+V` (pas l’éditeur brut).  
+> Si une image ne charge pas : `Ctrl+Shift+P` → *Markdown: Open Preview* → accepter l’affichage des fichiers locaux si Cursor le demande.
 
 ---
 
@@ -20,7 +23,11 @@ $ minikube profile list
 │ minikube │ docker │ docker  │ 192.168.49.2   │ v1.35.1 │ OK     │
 ```
 
-**Capture** : `docs/captures/etape1/q01-minikube-docker.png`
+
+
+<p><strong>Question 1 — Vérification du driver Docker (minikube profile list)</strong></p>
+<p><img src="captures/etape1/q01-minikube-docker.png" alt="Question 1 — Vérification du driver Docker (minikube profile list)" width="900" /></p>
+
 
 ---
 
@@ -37,7 +44,11 @@ dashboard               minikube    disabled
 ...
 ```
 
-**Capture** : `docs/captures/etape1/q02-addons-list.png`
+
+
+<p><strong>Question 2 — Liste des addons Minikube</strong></p>
+<p><img src="captures/etape1/q02-addons-list.png" alt="Question 2 — Liste des addons Minikube" width="900" /></p>
+
 
 ---
 
@@ -50,7 +61,11 @@ $ minikube addons enable metrics-server
 * Le module 'metrics-server' est activé
 ```
 
-**Capture** : `docs/captures/etape1/q03-addon-enable.png`
+
+
+<p><strong>Question 3 — Activation de metrics-server</strong></p>
+<p><img src="captures/etape1/q03-addon-enable.png" alt="Question 3 — Activation de metrics-server" width="900" /></p>
+
 
 ---
 
@@ -64,7 +79,11 @@ $ minikube profile list
 
 Le profil **minikube** est le seul profil actif : un nœud control-plane, Kubernetes v1.35.1, IP du cluster 192.168.49.2.
 
-**Capture** : `docs/captures/etape1/q04-profiles.png`
+
+
+<p><strong>Question 4 — Profils Minikube et caractéristiques</strong></p>
+<p><img src="captures/etape1/q04-profiles.png" alt="Question 4 — Profils Minikube et caractéristiques" width="900" /></p>
+
 
 ---
 
@@ -72,7 +91,11 @@ Le profil **minikube** est le seul profil actif : un nœud control-plane, Kubern
 
 Le profil en cours est **minikube** (colonne ACTIVE PROFILE et contexte kubectl associé, marqués `*`).
 
-**Capture** : `docs/captures/etape1/q05-profile-courant.png`
+
+
+<p><strong>Question 5 — Profil actif (minikube)</strong></p>
+<p><img src="captures/etape1/q05-profile-courant.png" alt="Question 5 — Profil actif (minikube)" width="900" /></p>
+
 
 ---
 
@@ -104,7 +127,11 @@ kubeconfig: Configured
 
 Tous les composants du control-plane sont en état **Running**.
 
-**Capture** : `docs/captures/etape1/q07-status.png`
+
+
+<p><strong>Question 7 — Statut Minikube</strong></p>
+<p><img src="captures/etape1/q07-status.png" alt="Question 7 — Statut Minikube" width="900" /></p>
+
 
 ---
 
@@ -122,7 +149,11 @@ kubernetes-dashboard        ClusterIP   10.103.224.207   80/TCP
 dashboard-metrics-scraper   ClusterIP   10.102.255.212   8000/TCP
 ```
 
-**Capture** : `docs/captures/etape1/q08-dashboard-url.png`
+
+
+<p><strong>Question 8 — Accès au dashboard (URL)</strong></p>
+<p><img src="captures/etape1/q08-dashboard-url.png" alt="Question 8 — Accès au dashboard (URL)" width="900" /></p>
+
 
 ---
 
@@ -130,7 +161,11 @@ dashboard-metrics-scraper   ClusterIP   10.102.255.212   8000/TCP
 
 Le **Kubernetes Dashboard** est une interface web fournie par le projet Kubernetes. Il permet de visualiser et piloter les ressources du cluster : pods, deployments, services, namespaces, logs, sans passer uniquement par la ligne de commande. Couplé à **metrics-server**, il affiche en plus des indicateurs de charge (CPU, mémoire). C’est un complément à `kubectl` et à l’addon **Lens** mentionné dans le polycopié.
 
-**Capture** : `docs/captures/etape1/q09-dashboard-vue.png`
+
+
+<p><strong>Question 9 — Interface Kubernetes Dashboard</strong></p>
+<p><img src="captures/etape1/q09-dashboard-vue.png" alt="Question 9 — Interface Kubernetes Dashboard" width="900" /></p>
+
 
 ---
 
@@ -144,7 +179,11 @@ minikube   Ready    control-plane   31m   v1.35.1   192.168.49.2   Debian GNU/Li
 
 Un seul nœud **Ready**, rôle `control-plane`.
 
-**Capture** : `docs/captures/etape1/q10-nodes.png`
+
+
+<p><strong>Question 10 — Liste des nœuds (kubectl get nodes)</strong></p>
+<p><img src="captures/etape1/q10-nodes.png" alt="Question 10 — Liste des nœuds (kubectl get nodes)" width="900" /></p>
+
 
 ---
 
@@ -176,7 +215,11 @@ NAME       STATUS   ROLES           VERSION
 minikube   Ready    control-plane   v1.35.1
 ```
 
-**Capture** : `docs/captures/etape1/q11-node-add-delete.png`
+
+
+<p><strong>Question 11 — Ajout et suppression d'un nœud</strong></p>
+<p><img src="captures/etape1/q11-node-add-delete.png" alt="Question 11 — Ajout et suppression d'un nœud" width="900" /></p>
+
 
 ---
 
@@ -189,7 +232,11 @@ minikube logs --length=50
 
 La commande `minikube logs` agrège les journaux des composants du cluster (apiserver, kubelet, addons, etc.). Elle sert au diagnostic en cas de démarrage bloqué ou d’addon défaillant. Nous l’avons utilisée après l’activation de metrics-server pour confirmer le déploiement du pod associé.
 
-**Capture** : `docs/captures/etape1/q12-minikube-logs.png`
+
+
+<p><strong>Question 12 — Logs Minikube</strong></p>
+<p><img src="captures/etape1/q12-minikube-logs.png" alt="Question 12 — Logs Minikube" width="900" /></p>
+
 
 ---
 
@@ -210,7 +257,11 @@ k8s_kube-apiserver_kube-apiserver-minikube_... kube-apiserver           Up
 
 On y voit notamment l’image **nginx** du déploiement de test et **metrics-server** activé à la question (3).
 
-**Capture** : `docs/captures/etape1/q13-images.png`
+
+
+<p><strong>Question 13 — Conteneurs Docker dans Minikube</strong></p>
+<p><img src="captures/etape1/q13-images.png" alt="Question 13 — Conteneurs Docker dans Minikube" width="900" /></p>
+
 
 ---
 
@@ -226,7 +277,11 @@ NAME                        READY   STATUS    RESTARTS   AGE
 nginx-tp-74f964dd57-bcc2c   1/1     Running   0          2m
 ```
 
-**Capture** : `docs/captures/etape1/q14-nginx-deploy.png`
+
+
+<p><strong>Question 14 — Déploiement nginx</strong></p>
+<p><img src="captures/etape1/q14-nginx-deploy.png" alt="Question 14 — Déploiement nginx" width="900" /></p>
+
 
 ---
 
@@ -244,7 +299,11 @@ nginx-tp   NodePort   10.109.49.73   80:30518/TCP   30s
 
 Le service est exposé sur le **NodePort 30518**.
 
-**Capture** : `docs/captures/etape1/q15-nginx-service.png`
+
+
+<p><strong>Question 15 — Service NodePort nginx</strong></p>
+<p><img src="captures/etape1/q15-nginx-service.png" alt="Question 15 — Service NodePort nginx" width="900" /></p>
+
 
 ---
 
@@ -259,7 +318,11 @@ kubectl describe svc nginx-tp
 - **Deployment** : 1 réplica, image `nginx:alpine`, stratégie RollingUpdate
 - **Service** : type NodePort, port 80 → targetPort 80, NodePort **30518**, endpoint `10.244.0.4:80`
 
-**Capture** : `docs/captures/etape1/q16-describe.png`
+
+
+<p><strong>Question 16 — Description du service nginx</strong></p>
+<p><img src="captures/etape1/q16-describe.png" alt="Question 16 — Description du service nginx" width="900" /></p>
+
 
 ---
 
@@ -272,7 +335,11 @@ http://127.0.0.1:55971
 
 Sous Windows avec le driver Docker, Minikube ouvre un tunnel local : l’URL pointe vers `127.0.0.1` avec un port dynamique. Le NodePort direct est accessible via `http://192.168.49.2:30518` (`minikube ip` + port du service).
 
-**Capture** : `docs/captures/etape1/q17-service-url.png`
+
+
+<p><strong>Question 17 — URL du service nginx</strong></p>
+<p><img src="captures/etape1/q17-service-url.png" alt="Question 17 — URL du service nginx" width="900" /></p>
+
 
 ---
 
@@ -282,7 +349,11 @@ Nous avons ouvert l’URL fournie par `minikube service nginx-tp --url` dans le 
 
 > Sous Windows, le tunnel `minikube service` nécessite de **laisser le terminal ouvert** le temps de la consultation (message affiché par Minikube).
 
-**Capture** : `docs/captures/etape1/q18-navigateur-nginx.png`
+
+
+<p><strong>Question 18 — Page nginx dans le navigateur</strong></p>
+<p><img src="captures/etape1/q18-navigateur-nginx.png" alt="Question 18 — Page nginx dans le navigateur" width="900" /></p>
+
 
 ---
 
@@ -298,7 +369,11 @@ nginx version: nginx/1.31.0
 
 Pour un shell interactif : `kubectl exec -it nginx-tp-74f964dd57-bcc2c -- /bin/sh`
 
-**Capture** : `docs/captures/etape1/q19-exec-nginx.png`
+
+
+<p><strong>Question 19 — Commande exec dans le conteneur nginx</strong></p>
+<p><img src="captures/etape1/q19-exec-nginx.png" alt="Question 19 — Commande exec dans le conteneur nginx" width="900" /></p>
+
 
 ---
 
@@ -310,7 +385,11 @@ kubectl logs nginx-tp-74f964dd57-bcc2c
 
 Les logs montrent l’exécution du script d’entrée Docker officiel nginx (`/docker-entrypoint.sh`) et l’activation de la configuration par défaut. Aucune erreur n’apparaît après le démarrage.
 
-**Capture** : `docs/captures/etape1/q20-nginx-logs.png`
+
+
+<p><strong>Question 20 — Logs du pod nginx</strong></p>
+<p><img src="captures/etape1/q20-nginx-logs.png" alt="Question 20 — Logs du pod nginx" width="900" /></p>
+
 
 ---
 
@@ -341,7 +420,16 @@ Le build Maven s’exécute dans l’étape `build` ; l’image finale ne contie
 
 **Intérêt du multi-stage** : image de production plus légère, pas d’outils de build dans l’image finale, pipeline reproductible pour la suite du TP (LaboTrack sur Kubernetes).
 
-**Captures** : `docs/captures/etape1/demo-multistage-build.png`, `docs/captures/etape1/demo-jar-local.png`
+
+
+<p><strong>Docker — Build multi-stage demo-service</strong></p>
+<p><img src="captures/etape1/demo-multistage-build.png" alt="Docker — Build multi-stage demo-service" width="900" /></p>
+
+
+
+<p><strong>Docker — Test curl du service démo</strong></p>
+<p><img src="captures/etape1/demo-jar-local.png" alt="Docker — Test curl du service démo" width="900" /></p>
+
 
 ---
 

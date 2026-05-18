@@ -1,0 +1,18 @@
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: sample-api.labotrack.svc.cluster.local
+  namespace: labotrack
+spec:
+  routes:
+    - name: GET /samples/{id}
+      condition:
+        method: GET
+        pathRegex: /samples/[0-9]+
+      timeout: 2s
+      isRetryable: true
+    - name: POST /samples
+      condition:
+        method: POST
+        pathRegex: /samples
+      timeout: 3s

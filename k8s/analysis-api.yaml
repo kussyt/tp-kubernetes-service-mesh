@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: analysis-api
+  namespace: labotrack
+spec:
+  selector:
+    app: analysis-api
+  ports:
+    - port: 8082
+      targetPort: 8082
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analysis-api
+  namespace: labotrack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analysis-api
+  template:
+    metadata:
+      labels:
+        app: analysis-api
+    spec:
+      containers:
+        - name: analysis-api
+          image: labotrack/analysis-api:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SAMPLE_API_URL
+              value: http://sample-api:8081
+            - name: ANALYSIS_LATENCY_MS
+              value: "300"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 15
+            periodSeconds: 10

@@ -88,16 +88,40 @@ minikube service result-frontend -n labotrack --url
 
 ## État d’avancement
 
-- [x] Structure dépôt & documentation alignée sur l’énoncé
-- [x] Compte-rendu Q1–Q20 rédigé (sorties terminal réelles)
-- [x] Service démo Étape 1 (`demo-service/`)
-- [ ] Code LaboTrack (3 microservices)
-- [ ] Dockerfiles multi-stage LaboTrack
-- [ ] Manifests K8s + Postgres
-- [ ] Scripts build / push / deploy
-- [ ] Linkerd ServiceProfile & ServerAuthorization
-- [ ] Captures PNG étape 1 & 2 (à déposer dans `docs/captures/`)
-- [ ] Schéma architecture
+- [x] Étape 1 — compte-rendu, captures, `demo-service`
+- [x] LaboTrack — 3 microservices (Java 21 / Spring Boot)
+- [x] Docker multi-stage + `labotrack/docker-compose.yml`
+- [x] Manifests Kubernetes + Postgres
+- [x] Scripts `build.sh`, `push.sh`, `deploy.sh`
+- [x] Linkerd — ServiceProfile & ServerAuthorization (`k8s/linkerd/`)
+- [x] Schéma architecture — [docs/architecture-labotrack.md](docs/architecture-labotrack.md)
+- [ ] Déploiement Minikube testé de bout en bout
+- [ ] Captures PNG étape 2 (`docs/captures/etape2/`)
+
+## LaboTrack — démarrage local (Docker Compose)
+
+```powershell
+cd labotrack
+docker compose up --build
+```
+
+Ouvrir [http://localhost:8080](http://localhost:8080)
+
+## LaboTrack — Minikube
+
+```powershell
+$env:Path = "C:\Program Files\Kubernetes\Minikube;" + $env:Path
+kubectl config use-context minikube
+
+linkerd install --crds | kubectl apply -f -
+linkerd install | kubectl apply -f -
+
+# Git Bash ou WSL
+./scripts/push.sh
+./scripts/deploy.sh
+
+minikube service result-frontend -n labotrack --url
+```
 
 ---
 

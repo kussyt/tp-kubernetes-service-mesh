@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaboTrack</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <h1>LaboTrack</h1>
+    <p>Mini système de suivi des analyses de laboratoire</p>
+</header>
+
+<main>
+    <section class="card">
+        <h2>1. Enregistrer un échantillon</h2>
+        <form id="sample-form">
+            <label>Patient
+                <input type="text" id="patientName" required placeholder="Dupont Jean">
+            </label>
+            <label>Examen
+                <select id="examType" required>
+                    <option value="glycemie">Glycémie</option>
+                    <option value="blood">Numération sanguine</option>
+                    <option value="serum">Sérologie</option>
+                </select>
+            </label>
+            <label>Type de prélèvement
+                <input type="text" id="sampleType" required placeholder="serum">
+            </label>
+            <button type="submit">Créer l'échantillon</button>
+        </form>
+        <pre id="sample-result" class="output"></pre>
+    </section>
+
+    <section class="card">
+        <h2>2. Lancer l'analyse</h2>
+        <label>Identifiant échantillon
+            <input type="number" id="sampleId" min="1" required placeholder="1">
+        </label>
+        <button type="button" id="analyze-btn">Analyser</button>
+        <pre id="analysis-result" class="output"></pre>
+    </section>
+</main>
+
+<footer>
+    <p>TP Kubernetes / Minikube / Linkerd — FRANCK &amp; CARPENTIER</p>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

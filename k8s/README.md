@@ -1,30 +1,24 @@
 # Manifests Kubernetes — LaboTrack
 
-Manifests YAML pour le namespace **`labotrack`**.
-
-## Fichiers prévus
-
-| Fichier | Contenu |
-|---------|---------|
+| Fichier | Ressource |
+|---------|-----------|
 | `namespace.yaml` | Namespace `labotrack` |
-| `postgres.yaml` | PostgreSQL + Service + Secret |
-| `sample-api.yaml` | Deployment + Service (8081) |
-| `analysis-api.yaml` | Deployment + Service (8082) |
-| `result-frontend.yaml` | Deployment + Service NodePort (8080) |
+| `postgres.yaml` | Secret + Deployment + Service PostgreSQL |
+| `sample-api.yaml` | API échantillons (8081) |
+| `analysis-api.yaml` | API analyses (8082) |
+| `result-frontend.yaml` | Frontend NodePort 30080 |
+| `linkerd/` | ServiceProfile, ServerAuthorization |
 
 ## Déploiement
 
 ```bash
-kubectl apply -f k8s/
-kubectl -n labotrack get all
+./scripts/push.sh    # build dans le daemon Minikube
+./scripts/deploy.sh
 ```
 
-Ou via le script : `../scripts/deploy.sh`
+## Accès frontend
 
-## Notes pédagogiques
-
-- `imagePullPolicy: Never` pour les images construites dans Minikube
-- Les Services utilisent des noms DNS courts (`sample-api`, `postgres`)
-- Linkerd : annoter le namespace `linkerd.io/inject=enabled`
-
-*Les fichiers YAML seront générés à l'étape suivante du TP.*
+```bash
+minikube service result-frontend -n labotrack --url
+# ou http://$(minikube ip):30080
+```

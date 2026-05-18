@@ -1,0 +1,26 @@
+apiVersion: policy.linkerd.io/v1beta2
+kind: Server
+metadata:
+  name: sample-api-http
+  namespace: labotrack
+spec:
+  podSelector:
+    matchLabels:
+      app: sample-api
+  port: 8081
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta2
+kind: ServerAuthorization
+metadata:
+  name: analysis-api-to-sample-api
+  namespace: labotrack
+spec:
+  server:
+    name: sample-api-http
+  client:
+    meshTLS:
+      serviceAccounts:
+        - name: default
+          namespace: labotrack
+  authorizationRequired: true

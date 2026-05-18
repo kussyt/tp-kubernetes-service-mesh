@@ -1,0 +1,32 @@
+# Build
+target/
+*.jar
+*.war
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Docker / local
+.env
+*.log
+
+# Captures (garder les placeholders, ignorer les vraies captures si volumineuses)
+docs/captures/**/*.png
+docs/captures/**/*.jpg
+!docs/captures/**/.gitkeep
+!docs/captures/**/README.md
+
+# Minikube / kubectl local
+*.kubeconfig.local

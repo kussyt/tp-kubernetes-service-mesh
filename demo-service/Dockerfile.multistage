@@ -1,0 +1,15 @@
+# Cas 3 — build multi-stage : compilation Maven + image runtime légère
+# Usage : docker build -f Dockerfile.multistage -t demo-service:multistage .
+# (aucun mvn local requis)
+
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
+WORKDIR /src
+COPY pom.xml .
+COPY src ./src
+RUN mvn -q clean package -DskipTests
+
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=build /src/target/demo-service-*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

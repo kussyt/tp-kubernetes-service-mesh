@@ -1,0 +1,9 @@
+services:
+  demo-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: demo-service:1.0.0
+    ports:
+      - "8080:8080"
+    # Prérequis : mvn clean package -DskipTests avant docker compose up --build

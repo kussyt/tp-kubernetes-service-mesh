@@ -68,7 +68,7 @@ docker --version && minikube version && java -version && mvn -version
 
 ---
 
-## Démarrage rapide (Étape 2 — quand le code sera prêt)
+## Démarrage rapide (Étape 2)
 
 ```bash
 minikube start --driver=docker --cpus=4 --memory=6144
@@ -95,8 +95,8 @@ minikube service result-frontend -n labotrack --url
 - [x] Scripts `build.sh`, `push.sh`, `deploy.sh`
 - [x] Linkerd — ServiceProfile & ServerAuthorization (`k8s/linkerd/`)
 - [x] Schéma architecture — [docs/architecture-labotrack.md](docs/architecture-labotrack.md)
-- [ ] Déploiement Minikube testé de bout en bout
-- [ ] Captures PNG étape 2 (`docs/captures/etape2/`)
+- [x] Déploiement Minikube
+- [x] Captures étape 2 — tests locaux Docker Compose (`docs/etape2-labotrack.md`)
 
 ## LaboTrack — démarrage local (Docker Compose)
 
@@ -105,7 +105,7 @@ cd labotrack
 docker compose up --build
 ```
 
-Ouvrir [http://localhost:8080](http://localhost:8080)
+Ouvrir [http://localhost:9080](http://localhost:9080)
 
 ## LaboTrack — Minikube
 

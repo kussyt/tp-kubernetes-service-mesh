@@ -1,6 +1,7 @@
 package fr.insa.archi.labotrack.frontend.web;
 
-import fr.insa.archi.labotrack.frontend.BackendProperties;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping("/api")
 public class ProxyController {
@@ -17,16 +20,20 @@ public class ProxyController {
     private final RestClient sampleClient;
     private final RestClient analysisClient;
 
-    public ProxyController(RestClient.Builder builder, BackendProperties properties) {
-        this.sampleClient = builder.baseUrl(properties.sampleApiUrl()).build();
-        this.analysisClient = builder.baseUrl(properties.analysisApiUrl()).build();
+    public ProxyController(
+            @Value("${SAMPLE_API_URL:http://sample-api:8081}") String sampleApiUrl,
+            @Value("${ANALYSIS_API_URL:http://analysis-api:8082}") String analysisApiUrl) {
+        this.sampleClient = RestClient.builder().baseUrl(sampleApiUrl).build();
+        this.analysisClient = RestClient.builder().baseUrl(analysisApiUrl).build();
     }
 
     @PostMapping("/samples")
-    public ResponseEntity<String> createSample(@RequestBody String body) {
+    public ResponseEntity<String> createSample(@RequestBody byte[] body) {
+        String json = new String(body, StandardCharsets.UTF_8);
         return sampleClient.post()
                 .uri("/samples")
-                .body(body)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json)
                 .retrieve()
                 .toEntity(String.class);
     }

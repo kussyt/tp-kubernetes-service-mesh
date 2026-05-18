@@ -52,17 +52,11 @@ docs/captures/
 
 ## Étape 2 — LaboTrack & Linkerd
 
-| Fichier | Contenu |
-|---------|---------|
-| `etape2/01-pods-labotrack.png` | `kubectl -n labotrack get pods` (2/2 avec proxy) |
-| `etape2/02-post-samples.png` | `POST /samples` (curl ou frontend) |
-| `etape2/03-analyze-result.png` | Résultat analyse |
-| `etape2/04-frontend-parcours.png` | Page web parcours complet |
-| `etape2/05-linkerd-check.png` | `linkerd check` |
-| `etape2/06-linkerd-stat.png` | `linkerd stat deploy -n labotrack` |
-| `etape2/07-linkerd-dashboard.png` | Dashboard Viz |
-| `etape2/08-serviceprofile.png` | ServiceProfile appliqué (optionnel) |
-| `etape2/09-architecture.png` | Schéma d'architecture |
+| Fichier | Contenu | Intégré dans le compte-rendu |
+|---------|---------|------------------------------|
+| `etape2/01-docker-compose-ps.png` | `docker compose ps` — stack locale | [etape2-labotrack.md](../etape2-labotrack.md) |
+| `etape2/02-post-samples-api.png` | `POST /samples` (sample-api) | [etape2-labotrack.md](../etape2-labotrack.md) |
+| `etape2/03-post-analyze-api.png` | `POST /analyze/{id}` (analysis-api) | [etape2-labotrack.md](../etape2-labotrack.md) |
 
 ---
 

@@ -47,4 +47,4 @@ services:
       SAMPLE_API_URL: http://sample-api:8081
       ANALYSIS_API_URL: http://analysis-api:8082
     ports:
-      - "8090:8080"
+      - "9080:8080"

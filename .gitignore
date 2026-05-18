@@ -21,6 +21,7 @@ Thumbs.db
 # Docker / local
 .env
 *.log
+tmp-*.json
 
 # Captures : versionnées dans docs/captures/ pour la remise du TP
 

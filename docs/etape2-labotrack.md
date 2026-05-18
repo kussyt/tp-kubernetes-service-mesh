@@ -2,9 +2,68 @@
 
 > **Énoncé officiel** : `docs/TP/tp_kubernetes (Services Mesh) 2026.pdf` (pages 2–5)
 
+**Équipe** : Marius FRANCK (marius.franck@uphf.fr), Simon CARPENTIER (simon.carpentier@uphf.fr)  
+**Date** : 18 mai 2026  
+**Environnement** : Windows, Docker Desktop, Minikube (driver `docker`), Kubernetes, Linkerd
+
 **LaboTrack** simule le parcours d’un échantillon biologique en laboratoire : enregistrement → analyse → restitution.
 
 > Le service démo `/monservice/*` (Étape 1) est **distinct** de ce projet.
+
+Les captures d’écran des manipulations locales (Docker Compose) sont intégrées ci-dessous.
+
+> **Pour voir les images** : ouvrir l’**aperçu Markdown** avec `Ctrl+Shift+V` (pas l’éditeur brut).
+
+---
+
+## Tests locaux — Docker Compose
+
+### Démarrage de la stack
+
+```powershell
+cd labotrack
+docker compose up --build -d
+docker compose ps
+```
+
+Quatre conteneurs doivent être `Up` : `postgres`, `sample-api`, `analysis-api`, `result-frontend`.
+
+<p><strong>Démarrage Docker Compose — docker compose ps</strong></p>
+<p><img src="captures/etape2/01-docker-compose-ps.png" alt="Docker Compose — quatre conteneurs Up" width="900" /></p>
+
+---
+
+### Création d’un échantillon (`sample-api`)
+
+```powershell
+Invoke-RestMethod http://localhost:8081/samples -Method POST `
+  -ContentType "application/json" `
+  -Body '{"patientName":"Dupont","examType":"glycemie","sampleType":"serum"}'
+```
+
+Réponse attendue : JSON avec `"id"`, `"status": "RECEIVED"`.
+
+<p><strong>POST /samples — enregistrement d’un échantillon</strong></p>
+<p><img src="captures/etape2/02-post-samples-api.png" alt="POST /samples — création échantillon" width="900" /></p>
+
+---
+
+### Lancement d’une analyse (`analysis-api`)
+
+```powershell
+Invoke-RestMethod http://localhost:8082/analyze/1 -Method POST
+```
+
+Réponse attendue : JSON avec `"status": "COMPLETED"`, biomarqueur et interprétation (latence simulée ~300 ms).
+
+<p><strong>POST /analyze/1 — résultat d’analyse simulée</strong></p>
+<p><img src="captures/etape2/03-post-analyze-api.png" alt="POST /analyze/1 — résultat analyse" width="900" /></p>
+
+---
+
+### Interface web
+
+Frontend accessible sur [http://localhost:9080](http://localhost:9080) (port mappé dans `docker-compose.yml` pour éviter un conflit avec le port 8080).
 
 ---
 
@@ -274,8 +333,11 @@ Stack d’observation complémentaire — non obligatoire.
 
 ## 7. Docker Compose (dev local, hors K8s)
 
+Voir la section [Tests locaux — Docker Compose](#tests-locaux--docker-compose) en tête de document (captures incluses).
+
 ```bash
-docker compose -f labotrack/docker-compose.yml up --build
+cd labotrack
+docker compose up --build -d
 ```
 
 ---
@@ -295,9 +357,11 @@ docker compose -f labotrack/docker-compose.yml up --build
 
 ---
 
-## Captures attendues
+## Captures
 
-Voir [captures/README.md](captures/README.md) — dossier `docs/captures/etape2/`.
+Manipulations locales Docker Compose : voir [Tests locaux — Docker Compose](#tests-locaux--docker-compose) (`01` à `03` dans `docs/captures/etape2/`).
+
+Index complet : [captures/README.md](captures/README.md).
 
 ## Dépannage
 

@@ -8,6 +8,15 @@ function showOutput(element, data) {
     element.textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
 }
 
+async function parseResponse(response) {
+    const text = await response.text();
+    try {
+        return { data: JSON.parse(text), raw: text };
+    } catch {
+        return { data: null, raw: text };
+    }
+}
+
 sampleForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const body = {
@@ -16,21 +25,26 @@ sampleForm.addEventListener("submit", async (event) => {
         sampleType: document.getElementById("sampleType").value.trim()
     };
 
+    if (!body.patientName || !body.sampleType) {
+        showOutput(sampleResult, "Renseignez le nom du patient et le type de prélèvement.");
+        return;
+    }
+
     try {
         const response = await fetch("/api/samples", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         });
-        const data = await response.json();
+        const { data, raw } = await parseResponse(response);
         if (!response.ok) {
-            showOutput(sampleResult, data);
+            showOutput(sampleResult, data || ("Erreur HTTP " + response.status + " : " + raw));
             return;
         }
         showOutput(sampleResult, data);
         sampleIdInput.value = data.id;
     } catch (error) {
-        showOutput(sampleResult, "Erreur : " + error.message);
+        showOutput(sampleResult, "Erreur réseau : " + error.message);
     }
 });
 
@@ -46,10 +60,14 @@ analyzeBtn.addEventListener("click", async () => {
 
     try {
         const response = await fetch("/api/analyze/" + id, { method: "POST" });
-        const data = await response.json();
+        const { data, raw } = await parseResponse(response);
+        if (!response.ok) {
+            showOutput(analysisResult, data || ("Erreur HTTP " + response.status + " : " + raw));
+            return;
+        }
         showOutput(analysisResult, data);
     } catch (error) {
-        showOutput(analysisResult, "Erreur : " + error.message);
+        showOutput(analysisResult, "Erreur réseau : " + error.message);
     } finally {
         analyzeBtn.disabled = false;
     }

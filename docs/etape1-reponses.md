@@ -6,8 +6,7 @@
 
 Les captures d’écran sont intégrées ci-dessous pour chaque question.
 
-> **Pour voir les images** : ouvrir l’**aperçu Markdown** avec `Ctrl+Shift+V` (pas l’éditeur brut).  
-> Si une image ne charge pas : `Ctrl+Shift+P` → *Markdown: Open Preview* → accepter l’affichage des fichiers locaux si Cursor le demande.
+> **Pour voir les images** : ouvrir l’**aperçu Markdown** avec `Ctrl+Shift+V` (pas l’éditeur brut).
 
 ---
 

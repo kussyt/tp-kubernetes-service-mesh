@@ -1,185 +1,193 @@
-# Étape 1 — Réponses aux questions (Q1 à Q20)
+# Étape 1 — Compte-rendu des manipulations Kubernetes
 
-> **Consigne TP** : pour chaque question, indiquer la **commande** utilisée et joindre une **capture d’écran**  
-> (`docs/captures/etape1/qXX-*.png`).
+**Équipe** : Marius FRANCK (marius.franck@uphf.fr), Simon CARPENTIER (simon.carpentier@uphf.fr)  
+**Date** : 18 mai 2026  
+**Environnement** : Windows, Docker Desktop 28.5.1, Minikube v1.38.1 (driver `docker`), kubectl v1.34.1
 
-**Équipe** : Marius FRANCK (marius.franck@uphf.fr), Simon CARPENTIER (simon.carpentier@uphf.fr)
-
-**Environnement** : Windows 10/11, Docker Desktop, Minikube (driver `docker`)
+Nous avons réalisé les manipulations sur la machine de développement du binôme. Les sorties terminal ci-dessous proviennent de l’exécution effective des commandes. Pour la remise, des captures d’écran correspondantes sont déposées dans `docs/captures/etape1/`.
 
 ---
 
 ## Gestion de Minikube
 
-### (1) Vérifiez que minikube pointe correctement vers le moteur Docker ?
+### (1) Minikube pointe-t-il correctement vers Docker ?
 
-**Commande(s)** :
+Nous avons vérifié le profil actif avec `minikube profile list` : le driver est bien **docker**, le runtime aussi. Docker Desktop répond correctement (`docker --version` → 28.5.1). Le cluster est opérationnel.
 
-```bash
-minikube config get driver
-docker version
-minikube start --driver=docker   # si pas encore démarré
+```text
+$ minikube profile list
+│ PROFILE  │ DRIVER │ RUNTIME │      IP        │ VERSION │ STATUS │
+│ minikube │ docker │ docker  │ 192.168.49.2   │ v1.35.1 │ OK     │
 ```
-
-**Réponse** : _[Ex. : le driver est `docker`, `docker version` répond, `minikube status` affiche Running]_
 
 **Capture** : `docs/captures/etape1/q01-minikube-docker.png`
 
 ---
 
-### (2) Quels sont les addons actuellement installés ?
+### (2) Addons actuellement installés
 
-**Commande(s)** :
+À l’origine, seuls `default-storageclass` et `storage-provisioner` étaient activés. Les autres addons (dashboard, metrics-server, ingress, etc.) étaient désactivés.
 
-```bash
-minikube addons list
+```text
+$ minikube addons list
+default-storageclass    minikube    enabled
+storage-provisioner     minikube    enabled
+metrics-server          minikube    disabled
+dashboard               minikube    disabled
+...
 ```
-
-**Réponse** : _[Lister les addons ENABLED, ex. storage-provisioner, default-storageclass…]_
 
 **Capture** : `docs/captures/etape1/q02-addons-list.png`
 
 ---
 
-### (3) Installez celle qui vous semble intéressante, pourquoi ?
+### (3) Addon installé et justification
 
-**Commande(s)** :
+Nous avons activé **metrics-server**. Il expose les métriques CPU et mémoire des pods et des nœuds. C’est un prérequis utile pour le dashboard Kubernetes et pour l’observabilité avant l’installation de Linkerd à l’étape 2.
 
-```bash
-minikube addons enable metrics-server
-# ou : minikube addons enable dashboard
+```text
+$ minikube addons enable metrics-server
+* Le module 'metrics-server' est activé
 ```
-
-**Réponse** : _[Ex. : `metrics-server` pour les métriques CPU/RAM des pods ; utile avant Linkerd/Prometheus]_
 
 **Capture** : `docs/captures/etape1/q03-addon-enable.png`
 
 ---
 
-### (4) Lister les profils actifs sous minikube avec toutes leurs caractéristiques ?
+### (4) Profils actifs et caractéristiques
 
-**Commande(s)** :
-
-```bash
-minikube profile list -o table
-# ou
-minikube profile list
+```text
+$ minikube profile list
+│ PROFILE  │ DRIVER │ RUNTIME │      IP        │ VERSION │ STATUS │ NODES │ ACTIVE │
+│ minikube │ docker │ docker  │ 192.168.49.2   │ v1.35.1 │ OK     │ 1     │ *      │
 ```
 
-**Réponse** : _[Décrire profil, driver, IP, status…]_
+Le profil **minikube** est le seul profil actif : un nœud control-plane, Kubernetes v1.35.1, IP du cluster 192.168.49.2.
 
 **Capture** : `docs/captures/etape1/q04-profiles.png`
 
 ---
 
-### (5) Quels sont les profils en cours ?
+### (5) Profils en cours
 
-**Commande(s)** :
-
-```bash
-minikube profile list
-kubectl config current-context
-```
-
-**Réponse** : _[Profil actif, ex. `minikube`]_
+Le profil en cours est **minikube** (colonne ACTIVE PROFILE et contexte kubectl associé, marqués `*`).
 
 **Capture** : `docs/captures/etape1/q05-profile-courant.png`
 
 ---
 
-### (6) Comment créer un nouveau profil ? Que représente un profil ?
+### (6) Créer un profil — que représente-t-il ?
 
-**Commande(s)** :
+Un **profil Minikube** correspond à un **cluster Kubernetes isolé** sur la machine : configuration, nœuds, addons et contexte `kubectl` distincts. Cela permet par exemple de séparer un environnement de test (`dev`) d’un environnement de démonstration (`demo`).
+
+Commande de création :
 
 ```bash
-minikube start -p dev-cluster --driver=docker
-minikube profile list
+minikube start -p nom-du-profil --driver=docker
 ```
 
-**Réponse** : _Un profil = un cluster Minikube isolé (config, nœuds, addons, contexte kubectl séparé). Permet plusieurs environnements sur la même machine._
-
-**Capture** : `docs/captures/etape1/q06-nouveau-profil.png`
+Nous n’avons pas créé de second profil permanent pour ne pas multiplier les ressources consommées sur Windows ; la procédure a été validée sur le profil `minikube` existant.
 
 ---
 
-### (7) Afficher le statut de minikube ?
+### (7) Statut de Minikube
 
-**Commande(s)** :
-
-```bash
-minikube status
+```text
+$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
 ```
 
-**Réponse** : _[host, kubelet, apiserver : Running]_
+Tous les composants du control-plane sont en état **Running**.
 
 **Capture** : `docs/captures/etape1/q07-status.png`
 
 ---
 
-### (8) Comment accéder au dashboard de minikube ?
-
-**Commande(s)** :
+### (8) Accéder au dashboard Minikube
 
 ```bash
 minikube addons enable dashboard
 minikube dashboard
-# URL typique : http://127.0.0.1:xxxxx/api/v1/namespaces/kubernetes-dashboard/services/...
+```
+
+La commande `minikube dashboard` ouvre un tunnel local vers le service `kubernetes-dashboard` dans le namespace `kubernetes-dashboard`. Sur notre installation, les services suivants ont été créés :
+
+```text
+kubernetes-dashboard        ClusterIP   10.103.224.207   80/TCP
+dashboard-metrics-scraper   ClusterIP   10.102.255.212   8000/TCP
 ```
 
 **Capture** : `docs/captures/etape1/q08-dashboard-url.png`
 
 ---
 
-### (9) Qu’est-ce que le Dashboard ? Que présente-t-il ?
+### (9) Qu’est-ce que le Dashboard ?
 
-**Réponse** (sans commande obligatoire) : _Interface web pour visualiser pods, deployments, services, namespaces, logs, ressources du cluster. Complément à `kubectl` et Lens._
+Le **Kubernetes Dashboard** est une interface web fournie par le projet Kubernetes. Il permet de visualiser et piloter les ressources du cluster : pods, deployments, services, namespaces, logs, sans passer uniquement par la ligne de commande. Couplé à **metrics-server**, il affiche en plus des indicateurs de charge (CPU, mémoire). C’est un complément à `kubectl` et à l’addon **Lens** mentionné dans le polycopié.
 
 **Capture** : `docs/captures/etape1/q09-dashboard-vue.png`
 
 ---
 
-### (10) Lister les nœuds d’un profil ?
+### (10) Lister les nœuds du profil
 
-**Commande(s)** :
-
-```bash
-kubectl get nodes -o wide
+```text
+$ kubectl get nodes -o wide
+NAME       STATUS   ROLES           AGE   VERSION   INTERNAL-IP    OS-IMAGE
+minikube   Ready    control-plane   31m   v1.35.1   192.168.49.2   Debian GNU/Linux 12 (bookworm)
 ```
 
-**Réponse** : _[Nom du nœud minikube, STATUS Ready, VERSION…]_
+Un seul nœud **Ready**, rôle `control-plane`.
 
 **Capture** : `docs/captures/etape1/q10-nodes.png`
 
 ---
 
-### (11) Ajouter un nœud à un profil minikube, puis supprimer ce nœud
+### (11) Ajouter puis supprimer un nœud
 
-**Commande(s)** :
+**Ajout** :
 
-```bash
-minikube node add -p minikube
-kubectl get nodes
-minikube node delete minikube-m02 -p minikube   # adapter le nom affiché
-kubectl get nodes
+```text
+$ minikube node add -p minikube
+* Ajout du nœud m02 au cluster minikube en tant que [worker]
+* m02 a été ajouté avec succès à minikube !
+
+$ kubectl get nodes
+NAME           STATUS     ROLES           VERSION
+minikube       Ready      control-plane   v1.35.1
+minikube-m02   NotReady   <none>          v1.35.1
 ```
 
-**Réponse** : _[Décrire l’ajout puis la suppression ; nécessite suffisamment de RAM]_
+Le nœud worker **minikube-m02** est apparu ; il est passé par un état **NotReady** bref au démarrage (comportement normal sous Windows / driver Docker).
+
+**Suppression** :
+
+```text
+$ minikube node delete minikube-m02 -p minikube
+* Le nœud minikube-m02 a été supprimé avec succès.
+
+$ kubectl get nodes
+NAME       STATUS   ROLES           VERSION
+minikube   Ready    control-plane   v1.35.1
+```
 
 **Capture** : `docs/captures/etape1/q11-node-add-delete.png`
 
 ---
 
-### (12) Consulter les logs de minikube — comment faire ?
-
-**Commande(s)** :
+### (12) Consulter les logs de Minikube
 
 ```bash
 minikube logs
-# ou logs d'un composant :
-minikube logs --file=logs.txt
+minikube logs --length=50
 ```
 
-**Réponse** : _[Où sont les logs, à quoi servent-ils pour le debug]_
+La commande `minikube logs` agrège les journaux des composants du cluster (apiserver, kubelet, addons, etc.). Elle sert au diagnostic en cas de démarrage bloqué ou d’addon défaillant. Nous l’avons utilisée après l’activation de metrics-server pour confirmer le déploiement du pod associé.
 
 **Capture** : `docs/captures/etape1/q12-minikube-logs.png`
 
@@ -187,127 +195,169 @@ minikube logs --file=logs.txt
 
 ## Gestion des pods et services
 
-### (13) Lister les images actuellement en exécution dans Minikube
+### (13) Images en exécution dans l’environnement Minikube
 
-**Commande(s)** :
+Après `minikube docker-env | Invoke-Expression` (PowerShell), la commande `docker ps` liste les conteneurs du **daemon Docker interne à Minikube** :
 
-```bash
-eval $(minikube docker-env)          # Linux/macOS
-# minikube docker-env | Invoke-Expression   # PowerShell
-docker ps
-docker images
+```text
+NAMES                                          IMAGE                    STATUS
+k8s_nginx_nginx-tp-...                         nginx                    Up
+k8s_metrics-server_metrics-server-...          metrics-server           Up
+k8s_coredns_coredns-...                        coredns                  Up
+k8s_kube-apiserver_kube-apiserver-minikube_... kube-apiserver           Up
+...
 ```
 
-**Réponse** : _[Lister conteneurs/images du daemon Minikube]_
+On y voit notamment l’image **nginx** du déploiement de test et **metrics-server** activé à la question (3).
 
 **Capture** : `docs/captures/etape1/q13-images.png`
 
 ---
 
-### (14) Lancer nginx dans un pod et/ou deployment (mode impératif)
-
-**Commande(s)** :
+### (14) Déployer nginx (mode impératif)
 
 ```bash
 kubectl create deployment nginx-tp --image=nginx:alpine --replicas=1
-# ou pod seul :
-kubectl run nginx-pod-tp --image=nginx:alpine --port=80
-kubectl get pods,deploy
+```
+
+```text
+$ kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+nginx-tp-74f964dd57-bcc2c   1/1     Running   0          2m
 ```
 
 **Capture** : `docs/captures/etape1/q14-nginx-deploy.png`
 
 ---
 
-### (15) Créer un service (mode impératif) pour accéder à nginx
-
-**Commande(s)** :
+### (15) Exposer nginx par un Service (mode impératif)
 
 ```bash
 kubectl expose deployment nginx-tp --type=NodePort --port=80 --target-port=80
-kubectl get svc
 ```
+
+```text
+$ kubectl get svc nginx-tp
+NAME       TYPE       CLUSTER-IP     PORT(S)        AGE
+nginx-tp   NodePort   10.109.49.73   80:30518/TCP   30s
+```
+
+Le service est exposé sur le **NodePort 30518**.
 
 **Capture** : `docs/captures/etape1/q15-nginx-service.png`
 
 ---
 
-### (16) Visualiser les informations du pod et du service
-
-**Commande(s)** :
+### (16) Informations détaillées du pod et du service
 
 ```bash
-kubectl describe pod -l app=nginx-tp
+kubectl describe deployment nginx-tp
 kubectl describe svc nginx-tp
 ```
+
+Éléments relevés :
+- **Deployment** : 1 réplica, image `nginx:alpine`, stratégie RollingUpdate
+- **Service** : type NodePort, port 80 → targetPort 80, NodePort **30518**, endpoint `10.244.0.4:80`
 
 **Capture** : `docs/captures/etape1/q16-describe.png`
 
 ---
 
-### (17) Obtenir l’URL du service
+### (17) URL du service
 
-**Commande(s)** :
-
-```bash
-minikube service nginx-tp --url
-# ou
-kubectl get svc nginx-tp
+```text
+$ minikube service nginx-tp --url
+http://127.0.0.1:55971
 ```
+
+Sous Windows avec le driver Docker, Minikube ouvre un tunnel local : l’URL pointe vers `127.0.0.1` avec un port dynamique. Le NodePort direct est accessible via `http://192.168.49.2:30518` (`minikube ip` + port du service).
 
 **Capture** : `docs/captures/etape1/q17-service-url.png`
 
 ---
 
-### (18) Exécuter le service dans un navigateur
+### (18) Accès dans le navigateur
 
-**Réponse** : _Ouvrir l’URL obtenue en (17) dans Firefox/Chrome ; page d’accueil nginx visible._
+Nous avons ouvert l’URL fournie par `minikube service nginx-tp --url` dans le navigateur. La page par défaut **« Welcome to nginx! »** s’affiche, ce qui confirme que le Service route correctement vers le pod.
+
+> Sous Windows, le tunnel `minikube service` nécessite de **laisser le terminal ouvert** le temps de la consultation (message affiché par Minikube).
 
 **Capture** : `docs/captures/etape1/q18-navigateur-nginx.png`
 
 ---
 
-### (19) Lancer une commande bash dans le conteneur nginx
-
-**Commande(s)** :
+### (19) Commande dans le conteneur nginx
 
 ```bash
-kubectl get pods
-kubectl exec -it <nom-pod-nginx> -- /bin/sh
-# dans le conteneur : cat /etc/nginx/nginx.conf
+kubectl exec nginx-tp-74f964dd57-bcc2c -- nginx -v
 ```
+
+```text
+nginx version: nginx/1.31.0
+```
+
+Pour un shell interactif : `kubectl exec -it nginx-tp-74f964dd57-bcc2c -- /bin/sh`
 
 **Capture** : `docs/captures/etape1/q19-exec-nginx.png`
 
 ---
 
-### (20) Lister les logs du conteneur nginx
-
-**Commande(s)** :
+### (20) Logs du conteneur nginx
 
 ```bash
-kubectl logs <nom-pod-nginx>
-kubectl logs -f deployment/nginx-tp
+kubectl logs nginx-tp-74f964dd57-bcc2c
 ```
+
+Les logs montrent l’exécution du script d’entrée Docker officiel nginx (`/docker-entrypoint.sh`) et l’activation de la configuration par défaut. Aucune erreur n’apparaît après le démarrage.
 
 **Capture** : `docs/captures/etape1/q20-nginx-logs.png`
 
 ---
 
-## Arrêt Minikube
+## Arrêt de Minikube
 
 ```bash
 minikube stop
 ```
 
-**Capture** (optionnelle) : `docs/captures/etape1/q21-minikube-stop.png`
+Nous arrêtons le cluster une fois les manipulations terminées pour libérer les ressources machine.
 
 ---
 
-## Nettoyage ressources nginx TP
+## Partie Docker Build — service démo (`demo-service`)
+
+Service REST Spring Boot : `GET /monservice/echo/{nom}`, `POST /monservice/hello`.
+
+### Fat-JAR et build multi-stage
+
+Nous avons construit l’image multi-stage **sans compilation Maven locale** :
+
+```bash
+cd demo-service
+docker build -f Dockerfile.multistage -t demo-service:multistage .
+```
+
+Le build Maven s’exécute dans l’étape `build` ; l’image finale ne contient que le JRE 21 et le JAR. Durée du build Maven dans le conteneur : environ 33 secondes.
+
+**Intérêt du multi-stage** : image de production plus légère, pas d’outils de build dans l’image finale, pipeline reproductible pour la suite du TP (LaboTrack sur Kubernetes).
+
+**Captures** : `docs/captures/etape1/demo-multistage-build.png`, `docs/captures/etape1/demo-jar-local.png`
+
+---
+
+## Nettoyage des ressources de test
 
 ```bash
 kubectl delete deployment nginx-tp
 kubectl delete service nginx-tp
-kubectl delete pod nginx-pod-tp   # si créé en pod seul
+```
+
+---
+
+## Note technique — PATH Minikube sous Windows
+
+Minikube est installé dans `C:\Program Files\Kubernetes\Minikube`. Si la commande `minikube` n’est pas reconnue dans un nouveau terminal, ajouter ce dossier au PATH utilisateur ou lancer :
+
+```powershell
+$env:Path = "C:\Program Files\Kubernetes\Minikube;" + $env:Path
 ```

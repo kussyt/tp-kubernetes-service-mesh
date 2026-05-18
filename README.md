@@ -89,14 +89,15 @@ minikube service result-frontend -n labotrack --url
 ## État d’avancement
 
 - [x] Structure dépôt & documentation alignée sur l’énoncé
-- [x] Gabarit réponses Q1–Q20
+- [x] Compte-rendu Q1–Q20 rédigé (sorties terminal réelles)
 - [x] Service démo Étape 1 (`demo-service/`)
 - [ ] Code LaboTrack (3 microservices)
 - [ ] Dockerfiles multi-stage LaboTrack
 - [ ] Manifests K8s + Postgres
 - [ ] Scripts build / push / deploy
 - [ ] Linkerd ServiceProfile & ServerAuthorization
-- [ ] Captures & schéma architecture
+- [ ] Captures PNG étape 1 & 2 (à déposer dans `docs/captures/`)
+- [ ] Schéma architecture
 
 ---
 
